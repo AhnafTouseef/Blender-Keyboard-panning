@@ -1,6 +1,4 @@
-import os
-import subprocess
-import sys
+import os, subprocess, sys
 from .config import *
 
 # =========================================================================
@@ -58,10 +56,3 @@ def terminate_ahk_script():
     else:
          print("AHK Numpad Panner: Script was already stopped or finished.")
     ahk_process = None
-
-addon_dir = os.path.dirname(__file__)
-ahk_script_path = os.path.join(addon_dir, AHK_COMPILED_FILENAME)
-
-print(f'The path is: {ahk_script_path}')
-
-
