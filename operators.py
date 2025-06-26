@@ -134,8 +134,13 @@ class AHK_OT_GenerateAndRecompileScript(bpy.types.Operator):
 
             if process.returncode == 0:
                 self.report({'INFO'}, f"AHK script generated and compiled successfully: {AHK_COMPILED_FILENAME}")
-                show_delayed_message(f"AHK script generated and compiled successfully! ({AHK_COMPILED_FILENAME})", title="Compilation Success")
                 launch_ahk_script()
+                # Delete the generated AHK file after successful compilation
+                try:
+                    os.remove(generated_ahk_path)
+                    print(f"AHK Compile: Deleted temporary generated script '{generated_ahk_path}'")
+                except Exception as e:
+                    print(f"AHK Compile: Failed to delete temporary script '{generated_ahk_path}': {e}")
             else:
                 error_msg = f"AHK compilation failed (Error Code: {process.returncode})."
                 if process.stdout:
@@ -144,12 +149,10 @@ class AHK_OT_GenerateAndRecompileScript(bpy.types.Operator):
                     error_msg += f"\nCompiler Errors (stderr):\n{process.stderr}"
                 print(f"AHK Compile ERROR: {error_msg}")
                 self.report({'ERROR'}, "AHK compilation failed! Check Blender console for details.")
-                show_delayed_message("AHK compilation failed! See console for details.", title="Compilation Failed")
 
         except Exception as e:
             self.report({'ERROR'}, f"Error during AHK compilation process: {e}")
             print(f"AHK Compile Exception: {e}")
-            show_delayed_message(f"Error during AHK compilation process: {e}", title="Compilation Error")
         
         return {'FINISHED'}
 
