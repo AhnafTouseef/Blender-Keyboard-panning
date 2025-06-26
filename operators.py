@@ -5,8 +5,8 @@ from .utils import *
 #                               Operator No.1
 # =========================================================================
 
-class AHK_OT_SetKeyModal(bpy.types.Operator):
-    bl_idname = "ahk.set_key_modal"
+class BL_OT_SetKeyModal(bpy.types.Operator):
+    bl_idname = "bl.set_key_modal"
     bl_label = "Set Pan Key"
     bl_options = {'REGISTER', 'INTERNAL'}
 
@@ -35,18 +35,18 @@ class AHK_OT_SetKeyModal(bpy.types.Operator):
 
         # Only process key down or mouse button press events
         if event.value == 'PRESS':
-            captured_key_ahk = AHK_KEY_MAP.get(event.type, None)
+            captured_key = KEY_MAP.get(event.type, None)
             
-            if captured_key_ahk:
-                # If a valid AHK key name is found
+            if captured_key:
+                # If a valid key name is found
                 prefs = context.preferences.addons[__package__].preferences
-                setattr(prefs, self.target_property, captured_key_ahk) # Update the preference property
+                setattr(prefs, self.target_property, captured_key) # Update the preference property
                 
-                self.report({'INFO'}, f"Key '{captured_key_ahk}' assigned to '{self.target_label}'.")
+                self.report({'INFO'}, f"Key '{captured_key}' assigned to '{self.target_label}'.")
                 context.area.tag_redraw() # Force redraw to update UI
                 return {'FINISHED'} # This implicitly removes the modal handler
             else:
-                # If the pressed key is not in our AHK_KEY_MAP
+                # If the pressed key is not in our KEY_MAP
                 self.report({'WARNING'}, f"Unsupported key '{event.type}'. Please try another key. (Press ESC to cancel)")
                 return {'RUNNING_MODAL'} # Keep listening
 
@@ -66,9 +66,9 @@ class AHK_OT_SetKeyModal(bpy.types.Operator):
 # =========================================================================
     
 # --- Generate and Recompile Operator Class (No changes) ---
-class AHK_OT_GenerateAndRecompileScript(bpy.types.Operator):
-    bl_idname = "ahk.generate_and_recompile_script"
-    bl_label = "Generate & Recompile AHK Script"
+class BL_OT_GenerateAndRecompileScript(bpy.types.Operator):
+    bl_idname = "bl.generate_and_recompile_script"
+    bl_label = "Generate & Recompile Script"
     bl_description = "Generates a new AHK script based on key preferences and recompiles it using the bundled compiler."
 
     @classmethod
@@ -79,26 +79,26 @@ class AHK_OT_GenerateAndRecompileScript(bpy.types.Operator):
         prefs = context.preferences.addons[__package__].preferences
         
         addon_dir = os.path.dirname(__file__)
-        template_path = os.path.join(addon_dir, AHK_TEMPLATE_FILENAME)
-        generated_ahk_path = os.path.join(addon_dir, AHK_GENERATED_FILENAME)
-        compiled_exe_path = os.path.join(addon_dir, AHK_COMPILED_FILENAME)
+        template_path = os.path.join(addon_dir, TEMPLATE_FILENAME)
+        generated_path = os.path.join(addon_dir, GENERATED_FILENAME)
+        compiled_exe_path = os.path.join(addon_dir, COMPILED_FILENAME)
         
-        compiler_dir = os.path.join(addon_dir, AHK_COMPILER_DIR_NAME)
-        compiler_exe_path = os.path.join(compiler_dir, AHK_COMPILER_EXE)
-        compiler_bin_path = os.path.join(compiler_dir, AHK_COMPILER_BIN)
+        compiler_dir = os.path.join(addon_dir, COMPILER_DIR_NAME)
+        compiler_exe_path = os.path.join(compiler_dir, COMPILER_EXE)
+        compiler_bin_path = os.path.join(compiler_dir, COMPILER_BIN)
 
         if not os.path.exists(template_path):
-            self.report({'ERROR'}, f"AHK template script not found: '{AHK_TEMPLATE_FILENAME}'. Add-on might be corrupted.")
+            self.report({'ERROR'}, f"template script not found: '{TEMPLATE_FILENAME}'. Add-on might be corrupted.")
             return {'CANCELLED'}
         if not os.path.exists(compiler_exe_path) or not os.path.exists(compiler_bin_path):
-            self.report({'ERROR'}, f"Bundled compiler files not found in '{AHK_COMPILER_DIR_NAME}'. Add-on might be corrupted or incomplete.")
+            self.report({'ERROR'}, f"Bundled compiler files not found in '{COMPILER_DIR_NAME}'. Add-on might be corrupted or incomplete.")
             return {'CANCELLED'}
 
         try:
             with open(template_path, 'r', encoding='utf-8') as f:
                 template_content = f.read()
         except Exception as e:
-            self.report({'ERROR'}, f"Failed to read AHK template '{AHK_TEMPLATE_FILENAME}': {e}")
+            self.report({'ERROR'}, f"Failed to read template '{TEMPLATE_FILENAME}': {e}")
             return {'CANCELLED'}
 
         replacements = {
@@ -113,46 +113,46 @@ class AHK_OT_GenerateAndRecompileScript(bpy.types.Operator):
             generated_content = generated_content.replace(placeholder, str(key))
 
         try:
-            with open(generated_ahk_path, 'w', encoding='utf-8') as f:
+            with open(generated_path, 'w', encoding='utf-8') as f:
                 f.write(generated_content)
         except Exception as e:
-            self.report({'ERROR'}, f"Failed to write generated AHK script '{AHK_GENERATED_FILENAME}': {e}")
+            self.report({'ERROR'}, f"Failed to write generated script '{GENERATED_FILENAME}': {e}")
             return {'CANCELLED'}
 
-        terminate_ahk_script()
+        terminate_script()
         
         try:
             command = [
                 compiler_exe_path,
-                '/in', generated_ahk_path,
+                '/in', generated_path,
                 '/out', compiled_exe_path,
                 '/silent'
             ]
             
-            print(f"AHK Compile: Running command: {' '.join(command)}")
+            print(f"Compile: Running command: {' '.join(command)}")
             process = subprocess.run(command, cwd=compiler_dir, capture_output=True, text=True, check=False)
 
             if process.returncode == 0:
-                self.report({'INFO'}, f"AHK script generated and compiled successfully: {AHK_COMPILED_FILENAME}")
-                launch_ahk_script()
-                # Delete the generated AHK file after successful compilation
+                self.report({'INFO'}, f"Script generated and compiled successfully: {COMPILED_FILENAME}")
+                launch_script()
+                # Delete the generated script file after successful compilation
                 try:
-                    os.remove(generated_ahk_path)
-                    print(f"AHK Compile: Deleted temporary generated script '{generated_ahk_path}'")
+                    os.remove(generated_path)
+                    print(f"Compile: Deleted temporary generated script '{generated_path}'")
                 except Exception as e:
-                    print(f"AHK Compile: Failed to delete temporary script '{generated_ahk_path}': {e}")
+                    print(f"Compile: Failed to delete temporary script '{generated_path}': {e}")
             else:
-                error_msg = f"AHK compilation failed (Error Code: {process.returncode})."
+                error_msg = f"Compilation failed (Error Code: {process.returncode})."
                 if process.stdout:
                     error_msg += f"\nCompiler Output (stdout):\n{process.stdout}"
                 if process.stderr:
                     error_msg += f"\nCompiler Errors (stderr):\n{process.stderr}"
-                print(f"AHK Compile ERROR: {error_msg}")
-                self.report({'ERROR'}, "AHK compilation failed! Check Blender console for details.")
+                print(f"Compile ERROR: {error_msg}")
+                self.report({'ERROR'}, "Compilation failed! Check Blender console for details.")
 
         except Exception as e:
-            self.report({'ERROR'}, f"Error during AHK compilation process: {e}")
-            print(f"AHK Compile Exception: {e}")
+            self.report({'ERROR'}, f"Error during Compilation process: {e}")
+            print(f"Compile Exception: {e}")
         
         return {'FINISHED'}
 
@@ -162,8 +162,8 @@ class AHK_OT_GenerateAndRecompileScript(bpy.types.Operator):
 # =========================================================================
 
 # --- Reset Keys Operator Class (No changes) ---
-class AHK_OT_ResetAHKKeys(bpy.types.Operator):
-    bl_idname = "ahk.reset_ahk_keys"
+class BL_OT_ResetKeys(bpy.types.Operator):
+    bl_idname = "bl.reset_keys"
     bl_label = "Reset Keys"
     bl_description = "Resets key assignments to their default values (NumpadUp, NumpadDown, NumpadLeft, NumpadRight)."
 
@@ -174,5 +174,5 @@ class AHK_OT_ResetAHKKeys(bpy.types.Operator):
         prefs.key_pan_left = "NumpadLeft"
         prefs.key_pan_right = "NumpadRight"
         self.report({'INFO'}, "Key assignments reset to defaults.")
-        bpy.ops.ahk.generate_and_recompile_script()
+        bpy.ops.bl.generate_and_recompile_script()
         return {'FINISHED'}
