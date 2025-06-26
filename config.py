@@ -13,7 +13,7 @@ COMPILER_BIN = "AutoHotkeySC.bin" # Name of the required compiler runtime binary
 # --- Mapping from Blender's event.type to AutoHotkey key names ---
 # This dictionary translates Blender's internal key identifiers to names AHK understands.
 # Refer to AutoHotkey's KeyList for more names: https://www.autohotkey.com/docs/v1/KeyList.htm
-AHK_KEY_MAP = {
+KEY_MAP = {
     # Alphanumeric (Blender's uppercase, AHK's lowercase for single letters)
     'A': 'a', 'B': 'b', 'C': 'c', 'D': 'd', 'E': 'e', 'F': 'f', 'G': 'g', 'H': 'h', 'I': 'i', 'J': 'j',
     'K': 'k', 'L': 'l', 'M': 'm', 'N': 'n', 'O': 'o', 'P': 'p', 'Q': 'q', 'R': 'r', 'S': 's', 'T': 't',
