@@ -1,13 +1,13 @@
-ahk_process = None
+key_process = None
 
 # --- Configuration (for add-on internal paths and filenames) ---
-AHK_TEMPLATE_FILENAME = "template_blender_numpad_panner.ahk" # Source template for AHK script
-AHK_GENERATED_FILENAME = "blender_numpad_panner_custom_keys.ahk" # Generated AHK script with custom keys
-AHK_COMPILED_FILENAME = "blender_numpad_panner.exe" # Final compiled EXE (this is what is launched)
+TEMPLATE_FILENAME = "template_blender_numpad_panner.ahk" # Source template for AHK script
+GENERATED_FILENAME = "blender_numpad_panner_custom_keys.ahk" # Generated AHK script with custom keys
+COMPILED_FILENAME = "blender_numpad_panner.exe" # Final compiled EXE (this is what is launched)
 
-AHK_COMPILER_DIR_NAME = "compiler" # Subfolder name for compiler binaries
-AHK_COMPILER_EXE = "Ahk2Exe.exe"   # Name of the compiler executable
-AHK_COMPILER_BIN = "AutoHotkeySC.bin" # Name of the required compiler runtime binary
+COMPILER_DIR_NAME = "compiler" # Subfolder name for compiler binaries
+COMPILER_EXE = "Ahk2Exe.exe"   # Name of the compiler executable
+COMPILER_BIN = "AutoHotkeySC.bin" # Name of the required compiler runtime binary
 
 
 # --- Mapping from Blender's event.type to AutoHotkey key names ---
