@@ -4,7 +4,7 @@ bl_info = {
     "version": (1, 5),
     "blender": (3, 6, 0), 
     "location": "Add-ons Preferences",
-    "description": "Launches an external AutoHotkey script for Numpad panning in Blender, with bundled compiler for key customization.",
+    "description": "Launches an external AutoHotkey script for keyboard panning in Blender, with bundled compiler for key customization.",
     "warning": "This add-on requires a compiled AutoHotkey .exe script (Windows only). Recompilation is also Windows-only.",
     "category": "Interface",
 }
@@ -15,10 +15,10 @@ from .preferences import *
 
 
 classes = (
-    BL_Key_Panning_Preferences,
-    BL_OT_GenerateAndRecompileScript,
-    BL_OT_ResetKeys,
-    BL_OT_SetKeyModal,
+    BL_KEY_Pan_Preferences,
+    BL_KEY_GenerateAndRecompileScript,
+    BL_KEY_ResetKeys,
+    BL_KEY_SetKeyModal,
 )
 
 def register():
