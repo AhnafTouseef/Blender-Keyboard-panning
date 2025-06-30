@@ -5,8 +5,8 @@ from .utils import *
 #                               Operator No.1
 # =========================================================================
 
-class BL_OT_SetKeyModal(bpy.types.Operator):
-    bl_idname = "bl.set_key_modal"
+class BL_KEY_SetKeyModal(bpy.types.Operator):
+    bl_idname = "key.set_key_modal"
     bl_label = "Set Pan Key"
     bl_options = {'REGISTER', 'INTERNAL'}
 
@@ -35,10 +35,10 @@ class BL_OT_SetKeyModal(bpy.types.Operator):
 
         # Only process key down or mouse button press events
         if event.value == 'PRESS':
-            captured_key = KEY_MAP.get(event.type, None)
+            captured_key = AHK_KEY_MAP.get(event.type, None)
             
             if captured_key:
-                # If a valid key name is found
+                # If a valid AHK key name is found
                 prefs = context.preferences.addons[__package__].preferences
                 setattr(prefs, self.target_property, captured_key) # Update the preference property
                 
@@ -46,7 +46,7 @@ class BL_OT_SetKeyModal(bpy.types.Operator):
                 context.area.tag_redraw() # Force redraw to update UI
                 return {'FINISHED'} # This implicitly removes the modal handler
             else:
-                # If the pressed key is not in our KEY_MAP
+                # If the pressed key is not in our AHK_KEY_MAP
                 self.report({'WARNING'}, f"Unsupported key '{event.type}'. Please try another key. (Press ESC to cancel)")
                 return {'RUNNING_MODAL'} # Keep listening
 
@@ -66,10 +66,10 @@ class BL_OT_SetKeyModal(bpy.types.Operator):
 # =========================================================================
     
 # --- Generate and Recompile Operator Class (No changes) ---
-class BL_OT_GenerateAndRecompileScript(bpy.types.Operator):
-    bl_idname = "bl.generate_and_recompile_script"
+class BL_KEY_GenerateAndRecompileScript(bpy.types.Operator):
+    bl_idname = "key.generate_and_recompile_script"
     bl_label = "Generate & Recompile Script"
-    bl_description = "Generates a new AHK script based on key preferences and recompiles it using the bundled compiler."
+    bl_description = "Generates a new Script based on key preferences and recompiles it using the bundled compiler."
 
     @classmethod
     def poll(cls, context):
@@ -80,15 +80,15 @@ class BL_OT_GenerateAndRecompileScript(bpy.types.Operator):
         
         addon_dir = os.path.dirname(__file__)
         template_path = os.path.join(addon_dir, TEMPLATE_FILENAME)
-        generated_path = os.path.join(addon_dir, GENERATED_FILENAME)
+        generated_script_path = os.path.join(addon_dir, GENERATED_FILENAME)
         compiled_exe_path = os.path.join(addon_dir, COMPILED_FILENAME)
         
         compiler_dir = os.path.join(addon_dir, COMPILER_DIR_NAME)
-        compiler_exe_path = os.path.join(compiler_dir, COMPILER_EXE)
-        compiler_bin_path = os.path.join(compiler_dir, COMPILER_BIN)
+        compiler_exe_path = os.path.join(compiler_dir, AHK_COMPILER_EXE)
+        compiler_bin_path = os.path.join(compiler_dir, AHK_COMPILER_BIN)
 
         if not os.path.exists(template_path):
-            self.report({'ERROR'}, f"template script not found: '{TEMPLATE_FILENAME}'. Add-on might be corrupted.")
+            self.report({'ERROR'}, f"Template script not found: '{TEMPLATE_FILENAME}'. Add-on might be corrupted.")
             return {'CANCELLED'}
         if not os.path.exists(compiler_exe_path) or not os.path.exists(compiler_bin_path):
             self.report({'ERROR'}, f"Bundled compiler files not found in '{COMPILER_DIR_NAME}'. Add-on might be corrupted or incomplete.")
@@ -98,7 +98,7 @@ class BL_OT_GenerateAndRecompileScript(bpy.types.Operator):
             with open(template_path, 'r', encoding='utf-8') as f:
                 template_content = f.read()
         except Exception as e:
-            self.report({'ERROR'}, f"Failed to read template '{TEMPLATE_FILENAME}': {e}")
+            self.report({'ERROR'}, f"Failed to read Template '{TEMPLATE_FILENAME}': {e}")
             return {'CANCELLED'}
 
         replacements = {
@@ -113,10 +113,10 @@ class BL_OT_GenerateAndRecompileScript(bpy.types.Operator):
             generated_content = generated_content.replace(placeholder, str(key))
 
         try:
-            with open(generated_path, 'w', encoding='utf-8') as f:
+            with open(generated_script_path, 'w', encoding='utf-8') as f:
                 f.write(generated_content)
         except Exception as e:
-            self.report({'ERROR'}, f"Failed to write generated script '{GENERATED_FILENAME}': {e}")
+            self.report({'ERROR'}, f"Failed to write generated Script '{GENERATED_FILENAME}': {e}")
             return {'CANCELLED'}
 
         terminate_script()
@@ -124,35 +124,35 @@ class BL_OT_GenerateAndRecompileScript(bpy.types.Operator):
         try:
             command = [
                 compiler_exe_path,
-                '/in', generated_path,
+                '/in', generated_script_path,
                 '/out', compiled_exe_path,
                 '/silent'
             ]
             
-            print(f"Compile: Running command: {' '.join(command)}")
+            print(f"AHK Compile: Running command: {' '.join(command)}")
             process = subprocess.run(command, cwd=compiler_dir, capture_output=True, text=True, check=False)
 
             if process.returncode == 0:
                 self.report({'INFO'}, f"Script generated and compiled successfully: {COMPILED_FILENAME}")
                 launch_script()
-                # Delete the generated script file after successful compilation
+                # Delete the generated AHK file after successful compilation
                 try:
-                    os.remove(generated_path)
-                    print(f"Compile: Deleted temporary generated script '{generated_path}'")
+                    os.remove(generated_script_path)
+                    print(f"AHK Compile: Deleted temporary generated script '{generated_script_path}'")
                 except Exception as e:
-                    print(f"Compile: Failed to delete temporary script '{generated_path}': {e}")
+                    print(f"AHK Compile: Failed to delete temporary script '{generated_script_path}': {e}")
             else:
-                error_msg = f"Compilation failed (Error Code: {process.returncode})."
+                error_msg = f"AHK compilation failed (Error Code: {process.returncode})."
                 if process.stdout:
                     error_msg += f"\nCompiler Output (stdout):\n{process.stdout}"
                 if process.stderr:
                     error_msg += f"\nCompiler Errors (stderr):\n{process.stderr}"
-                print(f"Compile ERROR: {error_msg}")
-                self.report({'ERROR'}, "Compilation failed! Check Blender console for details.")
+                print(f"AHK Compile ERROR: {error_msg}")
+                self.report({'ERROR'}, "AHK compilation failed! Check Blender console for details.")
 
         except Exception as e:
-            self.report({'ERROR'}, f"Error during Compilation process: {e}")
-            print(f"Compile Exception: {e}")
+            self.report({'ERROR'}, f"Error during AHK compilation process: {e}")
+            print(f"AHK Compile Exception: {e}")
         
         return {'FINISHED'}
 
@@ -162,8 +162,8 @@ class BL_OT_GenerateAndRecompileScript(bpy.types.Operator):
 # =========================================================================
 
 # --- Reset Keys Operator Class (No changes) ---
-class BL_OT_ResetKeys(bpy.types.Operator):
-    bl_idname = "bl.reset_keys"
+class BL_KEY_ResetKeys(bpy.types.Operator):
+    bl_idname = "key.reset_keys"
     bl_label = "Reset Keys"
     bl_description = "Resets key assignments to their default values (NumpadUp, NumpadDown, NumpadLeft, NumpadRight)."
 
@@ -174,5 +174,5 @@ class BL_OT_ResetKeys(bpy.types.Operator):
         prefs.key_pan_left = "NumpadLeft"
         prefs.key_pan_right = "NumpadRight"
         self.report({'INFO'}, "Key assignments reset to defaults.")
-        bpy.ops.bl.generate_and_recompile_script()
+        bpy.ops.key.generate_and_recompile_script()
         return {'FINISHED'}
