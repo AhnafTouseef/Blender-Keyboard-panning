@@ -6,14 +6,14 @@ GENERATED_FILENAME = "blender_numpad_panner_custom_keys.ahk" # Generated AHK scr
 COMPILED_FILENAME = "blender_numpad_panner.exe" # Final compiled EXE (this is what is launched)
 
 COMPILER_DIR_NAME = "compiler" # Subfolder name for compiler binaries
-COMPILER_EXE = "Ahk2Exe.exe"   # Name of the compiler executable
-COMPILER_BIN = "AutoHotkeySC.bin" # Name of the required compiler runtime binary
+AHK_COMPILER_EXE = "Ahk2Exe.exe"   # Name of the compiler executable
+AHK_COMPILER_BIN = "AutoHotkeySC.bin" # Name of the required compiler runtime binary
 
 
-# --- Mapping from Blender's event.type to AutoHotkey key names ---
+# --- Mapping from Blender's event.type tzo AutoHotkey key names ---
 # This dictionary translates Blender's internal key identifiers to names AHK understands.
 # Refer to AutoHotkey's KeyList for more names: https://www.autohotkey.com/docs/v1/KeyList.htm
-KEY_MAP = {
+AHK_KEY_MAP = {
     # Alphanumeric (Blender's uppercase, AHK's lowercase for single letters)
     'A': 'a', 'B': 'b', 'C': 'c', 'D': 'd', 'E': 'e', 'F': 'f', 'G': 'g', 'H': 'h', 'I': 'i', 'J': 'j',
     'K': 'k', 'L': 'l', 'M': 'm', 'N': 'n', 'O': 'o', 'P': 'p', 'Q': 'q', 'R': 'r', 'S': 's', 'T': 't',
