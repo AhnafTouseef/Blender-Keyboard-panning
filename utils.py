@@ -9,14 +9,14 @@ def launch_script():
     global key_process
     
     if sys.platform != "win32":
-        print("Key panning: Not running on Windows. script will not be launched.")
+        print("Key panning: Not running on Windows. Script will not be launched.")
         return False
 
     addon_dir = os.path.dirname(__file__)
     script_path = os.path.join(addon_dir, COMPILED_FILENAME)
 
     if not os.path.exists(script_path):
-        print(f"Key panning ERROR: Compiled script not found at {script_path}")
+        print(f"Key panning ERROR: Compiled Script not found at {script_path}")
         return False
 
     if key_process and key_process.poll() is None:
@@ -31,7 +31,7 @@ def launch_script():
         print(f"Key panning: Launched script: {script_path} ")
         return True
     except Exception as e:
-        print(f"Key panning ERROR: Failed to launch script: {e}")
+        print(f"Key panning ERROR: Failed to launch Script: {e}")
         key_process = None
         return False
 
@@ -52,7 +52,7 @@ def terminate_script():
             else:
                 print(f"Key panning: Terminated script.")
         except Exception as e:
-            print(f"Key panning ERROR: Failed to terminate script: {e}")
+            print(f"Key panning ERROR: Failed to terminate Script: {e}")
     else:
          print("Key panning: Script was already stopped or finished.")
     key_process = None
