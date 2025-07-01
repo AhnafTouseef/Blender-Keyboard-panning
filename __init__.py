@@ -5,20 +5,20 @@ bl_info = {
     "blender": (3, 6, 0), 
     "location": "Add-ons Preferences",
     "description": "Launches an external AutoHotkey script for keyboard panning in Blender, with bundled compiler for key customization.",
-    "warning": "This add-on requires a compiled AutoHotkey .exe script (Windows only). Recompilation is also Windows-only.",
     "category": "Interface",
+    "warning": "This add-on requires a compiled AutoHotkey .exe script (Windows only). Recompilation is also Windows-only.",
 }
 
 import bpy
 from .operators import *
 from .preferences import *
 
-
 classes = (
     BL_KEY_Pan_Preferences,
     BL_KEY_GenerateAndRecompileScript,
     BL_KEY_ResetKeys,
     BL_KEY_SetKeyModal,
+    BL_KEY_OpenTemplateFile
 )
 
 def register():
@@ -29,6 +29,7 @@ def register():
     if bpy.context.preferences.addons.get(__name__):
         launch_script()
     print("Key panning: Add-on registered.")
+
 
 def unregister():
     print("Key panning: Unregistering add-on...")
