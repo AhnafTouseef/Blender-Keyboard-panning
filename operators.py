@@ -5,6 +5,7 @@ from .utils import *
 #                               Operator No.1
 # =========================================================================
 
+# --- Set Key Modal Operator Class ---
 class BL_KEY_SetKeyModal(bpy.types.Operator):
     bl_idname = "key.set_key_modal"
     bl_label = "Set Pan Key"
@@ -29,7 +30,7 @@ class BL_KEY_SetKeyModal(bpy.types.Operator):
     def modal(self, context, event):
         # Allow ESC key to cancel the modal
         if event.type == 'ESC' and event.value == 'PRESS':
-            self.report({'CANCELLED'}, f"Key assignment for '{self.target_label}' cancelled.")
+            self.report({'INFO'}, f"Key assignment for '{self.target_label}' cancelled.")
             context.area.tag_redraw()
             return {'CANCELLED'} # This implicitly removes the modal handler
 
@@ -65,7 +66,7 @@ class BL_KEY_SetKeyModal(bpy.types.Operator):
 #                               Operator No.2
 # =========================================================================
     
-# --- Generate and Recompile Operator Class (No changes) ---
+# --- Generate and Recompile Operator Class ---
 class BL_KEY_GenerateAndRecompileScript(bpy.types.Operator):
     bl_idname = "key.generate_and_recompile_script"
     bl_label = "Generate & Recompile Script"
@@ -153,7 +154,7 @@ class BL_KEY_GenerateAndRecompileScript(bpy.types.Operator):
         except Exception as e:
             self.report({'ERROR'}, f"Error during AHK compilation process: {e}")
             print(f"AHK Compile Exception: {e}")
-        
+        bpy.ops.wm.save_userpref()
         return {'FINISHED'}
 
 
@@ -161,7 +162,7 @@ class BL_KEY_GenerateAndRecompileScript(bpy.types.Operator):
 #                               Operator No.3
 # =========================================================================
 
-# --- Reset Keys Operator Class (No changes) ---
+# --- Reset Keys Operator Class ---
 class BL_KEY_ResetKeys(bpy.types.Operator):
     bl_idname = "key.reset_keys"
     bl_label = "Reset Keys"
@@ -175,4 +176,29 @@ class BL_KEY_ResetKeys(bpy.types.Operator):
         prefs.key_pan_right = "NumpadRight"
         self.report({'INFO'}, "Key assignments reset to defaults.")
         bpy.ops.key.generate_and_recompile_script()
+        bpy.ops.wm.save_userpref()
         return {'FINISHED'}
+    
+
+# =========================================================================
+#                               Operator No.4
+# =========================================================================
+    
+# --- Open Template File Operator Class
+class BL_KEY_OpenTemplateFile(bpy.types.Operator):
+    bl_idname = "key.open_template_file"
+    bl_label = "Open Template File"
+    bl_description = " Opens the template script file in the default text editor"
+
+    def execute(self, context):
+        addon_dir = os.path.dirname(__file__)
+        template_path = os.path.join(addon_dir, TEMPLATE_FILENAME)
+        subprocess.Popen(f'{template_path}', shell = True)
+        return {'FINISHED'}
+
+
+
+
+
+
+
