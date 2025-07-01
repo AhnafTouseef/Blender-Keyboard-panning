@@ -1,8 +1,16 @@
-﻿#NoTrayIcon
+#NoTrayIcon
 #NoEnv
 #Warn
+#Persistent  ; Keep script running
 SendMode Input
 SetWorkingDir %A_ScriptDir%
+SetTimer, CheckBlender, 1000  ; Check every 1 second
+
+CheckBlender:
+    Process, Exist, blender.exe
+    if (ErrorLevel = 0) {
+        ExitApp
+    }
 
 ; --- Configuration ---
 PanDelay := 15         ; Milliseconds between pan steps (lower = smoother/faster)
@@ -196,5 +204,4 @@ PanRight:
     If (CurrentPanSpeedRight < MaxPanSpeed)
         CurrentPanSpeedRight += AccelerationRate
 return
-
 
