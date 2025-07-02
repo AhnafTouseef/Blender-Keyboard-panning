@@ -195,10 +195,3 @@ class BL_KEY_OpenTemplateFile(bpy.types.Operator):
         template_path = os.path.join(addon_dir, TEMPLATE_FILENAME)
         subprocess.Popen(f'{template_path}', shell = True)
         return {'FINISHED'}
-
-
-
-
-
-
-
