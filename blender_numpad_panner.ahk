@@ -54,8 +54,6 @@ StopPanning(direction) {
 }
 
 
-
-
 ; --- NumpadUp (2) Hotkey ---
 #IfWinActive ahk_exe blender.exe ; Only allow hotkey to fire if Blender is active
 NumpadDown::
@@ -148,8 +146,6 @@ NumpadLeft Up::
 return
 
 
-
-
 PanUP:
     ; Stop if key is released OR if mouse moves outside Blender's window
     If (!NumpadUpPressed || !IsMouseOverBlender()) {
@@ -196,5 +192,3 @@ PanRight:
     If (CurrentPanSpeedRight < MaxPanSpeed)
         CurrentPanSpeedRight += AccelerationRate
 return
-
-
