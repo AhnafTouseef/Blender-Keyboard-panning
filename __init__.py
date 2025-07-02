@@ -13,6 +13,7 @@ import bpy
 from .operators import *
 from .preferences import *
 
+# Tupple of classes in addon
 classes = (
     BL_KEY_Pan_Preferences,
     BL_KEY_GenerateAndRecompileScript,
