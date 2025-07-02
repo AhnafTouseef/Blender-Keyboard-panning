@@ -32,37 +32,21 @@ class BL_KEY_Pan_Preferences(bpy.types.AddonPreferences):
         box = layout.box()
         box.label(text="Customize Panning Hotkeys (Windows Only)", icon='FILE')
         
-        # UI for Pan Up Key
-        row = box.row(align=True)
-        row.prop(self, "key_pan_up")
-        row.scale_x = 0.3
-        op = row.operator("key.set_key_modal", text="Set Key")
-        op.target_property = "key_pan_up"
-        op.target_label = "Pan Up Key" # Pass label for better modal feedback
+        # Define a helper method for layout
+        def draw_key_setting(box, prop_name, label, context_self):
+            row = box.row(align=True)
+            row.prop(context_self, prop_name)
+            row.scale_x = 0.3
+            op = row.operator("key.set_key_modal", text="Set Key")
+            op.target_property = prop_name
+            op.target_label = label
+        
+        # Call the helper function for each key
+        draw_key_setting(box, "key_pan_up", "Pan Up Key", self)
+        draw_key_setting(box, "key_pan_down", "Pan Down Key", self)
+        draw_key_setting(box, "key_pan_left", "Pan Left Key", self)
+        draw_key_setting(box, "key_pan_right", "Pan Right Key", self)
 
-        # UI for Pan Down Key
-        row = box.row(align=True)
-        row.prop(self, "key_pan_down")
-        row.scale_x = 0.3
-        op = row.operator("key.set_key_modal", text="Set Key")
-        op.target_property = "key_pan_down"
-        op.target_label = "Pan Down Key"
-
-        # UI for Pan Left Key
-        row = box.row(align=True)
-        row.prop(self, "key_pan_left")
-        row.scale_x = 0.3
-        op = row.operator("key.set_key_modal", text="Set Key")
-        op.target_property = "key_pan_left"
-        op.target_label = "Pan Left Key"
-
-        # UI for Pan Right Key
-        row = box.row(align=True)
-        row.prop(self, "key_pan_right")
-        row.scale_x = 0.3
-        op = row.operator("key.set_key_modal", text="Set Key")
-        op.target_property = "key_pan_right"
-        op.target_label = "Pan Right Key"
 
         row = box.row(align=False)
         row.operator("key.generate_and_recompile_script", 
