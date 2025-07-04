@@ -4,7 +4,7 @@
 SendMode Input
 SetWorkingDir %A_ScriptDir%
 
-; --- Configuration ---
+; --- Configuration ----
 PanDelay := 15         ; Milliseconds between pan steps (lower = smoother/faster)
 MaxPanSpeed := 20      ; Max pixels to move per step
 AccelerationRate := 1  ; How much the pan speed increases per step
