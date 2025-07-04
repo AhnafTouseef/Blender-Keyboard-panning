@@ -5,7 +5,7 @@ from .utils import *
 #                               Operator No.1
 # =========================================================================
 
-# --- Set Key Modal Operator Class ---
+# --- Set Key Modal Operator Class ----
 class BL_KEY_SetKeyModal(bpy.types.Operator):
     bl_idname = "key.set_key_modal"
     bl_label = "Set Pan Key"
