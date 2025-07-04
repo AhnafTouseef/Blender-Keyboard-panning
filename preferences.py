@@ -62,6 +62,3 @@ class BL_KEY_Pan_Preferences(bpy.types.AddonPreferences):
         row_template.operator("key.open_template_file", text='TEMPLATE FILE', icon='FILE_SCRIPT')
         box.label(text="- The template script is an AHK scrip. After editing The template, click Rcompile or Reset Keys.")
         box.label(text="- Either will do as per your changes.")
-
-        # box.label(text="- The generated script will be '%s' and compiled to '%s'." % (GENERATED_FILENAME, COMPILED_FILENAME))
-
