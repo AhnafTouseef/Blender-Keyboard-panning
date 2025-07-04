@@ -1,6 +1,6 @@
 key_process = None
 
-# --- Configuration (for add-on internal paths and filenames) ---
+# --- Configuration (for add-on internal paths and filenames) ----
 TEMPLATE_FILENAME = "template_blender_numpad_panner.ahk" # Source template for AHK script
 GENERATED_FILENAME = "blender_numpad_panner_custom_keys.ahk" # Generated AHK script with custom keys
 COMPILED_FILENAME = "blender_numpad_panner.exe" # Final compiled EXE (this is what is launched)
