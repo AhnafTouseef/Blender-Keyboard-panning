@@ -5,6 +5,7 @@ from .config import *
 #                               Function No.1
 # =========================================================================
 
+# ---Launch compiled AHK script--- 
 def launch_script():
     global key_process
     
@@ -40,6 +41,8 @@ def launch_script():
 #                               Function No.2
 # =========================================================================
 
+
+# ---Terminate active AHK script--- 
 def terminate_script():
     global key_process
     if key_process and key_process.poll() is None:
